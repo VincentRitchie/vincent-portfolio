@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowDown, Download, Sparkles, MapPin } from "lucide-react";
+import { ArrowRight, ArrowDown, Sparkles, MapPin } from "lucide-react";
 import { profile } from "@/lib/portfolio-data";
 import { GlowOrb } from "./shared";
+import { AnimatedHeroName } from "./animated-name";
+import { HeroSlider } from "./hero-slider";
 
 const scrollTo = (href: string) => {
   document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
@@ -51,15 +53,21 @@ export function Hero() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.05 }}
-            className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-[4.2rem]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="font-display text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl xl:text-[5.5rem]"
           >
-            <span className="text-gradient-silver">{profile.name}</span>
-            <span className="mt-3 block text-balance text-2xl font-semibold text-muted-foreground sm:text-3xl lg:text-[2rem]">
+            {/* Large main animated name — shows only VINCENT CHIMAOBI */}
+            <AnimatedHeroName />
+            <motion.span
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.9 }}
+              className="mt-4 block text-balance text-xl font-semibold text-muted-foreground sm:text-2xl lg:text-[1.75rem]"
+            >
               {profile.role}
-            </span>
+            </motion.span>
           </motion.h1>
 
           <motion.p
@@ -116,7 +124,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Right: profile image */}
+        {/* Right: premium 5-image showcase slider (replaces the former static single profile image) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -128,36 +136,17 @@ export function Hero() {
             <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-violet-600/30 via-fuchsia-600/20 to-sky-600/30 blur-2xl" />
             <div className="absolute -inset-1 -z-10 rounded-[2.2rem] bg-gradient-to-tr from-violet-500 via-fuchsia-500 to-sky-500 opacity-60 blur-md" />
 
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-card">
-              {/* Profile photo */}
-              <img
-                src={profile.profileImage}
-                alt={`${profile.name} — professional portrait`}
-                className="aspect-square w-full object-cover"
-                loading="eager"
-              />
-              {/* gradient veil for legibility */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent" />
+            {/* Slider — no internal name caption (the small duplicate was removed) */}
+            <HeroSlider />
 
-              {/* floating badge: name */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
-                <div className="glass-strong rounded-xl px-4 py-2.5">
-                  <p className="font-display text-sm font-semibold text-foreground">
-                    {profile.name}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground">
-                    AI Evaluation · Prompt Engineering
-                  </p>
-                </div>
-                <button
-                  onClick={() => scrollTo("#about")}
-                  className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-violet-400/40 bg-violet-500/20 text-violet-100 backdrop-blur-sm transition-all hover:scale-110 hover:bg-violet-500/30"
-                  aria-label="Read about me"
-                >
-                  <ArrowDown className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
+            {/* down-arrow — kept for navigation */}
+            <button
+              onClick={() => scrollTo("#about")}
+              className="absolute -bottom-5 left-1/2 z-30 grid h-11 w-11 -translate-x-1/2 place-items-center rounded-full border border-violet-400/40 bg-violet-500/20 text-violet-100 backdrop-blur-sm transition-all hover:scale-110 hover:bg-violet-500/30"
+              aria-label="Read about me"
+            >
+              <ArrowDown className="h-5 w-5" />
+            </button>
 
             {/* floating stat chip */}
             <motion.div

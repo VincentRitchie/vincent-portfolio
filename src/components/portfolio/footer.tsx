@@ -25,8 +25,13 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl border border-violet-400/40 bg-gradient-to-br from-violet-600/30 to-fuchsia-600/30 font-display text-sm font-bold text-foreground">
-                OVC
+              <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-violet-400/50 bg-gradient-to-br from-violet-600/30 to-fuchsia-600/30">
+                <img
+                  src={profile.avatar}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  draggable={false}
+                />
               </span>
               <div>
                 <p className="font-display text-base font-semibold text-foreground">

@@ -62,19 +62,24 @@ export function Navbar() {
         )}
       >
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Brand monogram — personal, NOT Afrik-Vine */}
+          {/* Brand avatar — personal profile photo (NOT Afrik-Vine) */}
           <button
             onClick={() => handleNav("#home")}
             className="group flex items-center gap-3"
             aria-label="Go to top"
           >
-            <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-violet-400/40 bg-gradient-to-br from-violet-600/30 to-fuchsia-600/30 font-display text-sm font-bold text-foreground">
-              OVC
-              <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+            <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-violet-400/50 bg-gradient-to-br from-violet-600/30 to-fuchsia-600/30">
+              <img
+                src={profile.avatar}
+                alt=""
+                className="h-full w-full object-cover"
+                draggable={false}
+              />
+              <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/15 transition-opacity group-hover:ring-violet-300/50" />
             </span>
             <span className="hidden flex-col leading-none sm:flex">
-              <span className="font-display text-sm font-semibold tracking-tight text-foreground">
-                {profile.shortName} Vincent
+              <span className="font-display text-[13px] font-semibold tracking-tight text-foreground">
+                {profile.name}
               </span>
               <span className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                 {profile.role}

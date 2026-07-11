@@ -70,3 +70,37 @@ Stage Summary:
 - Obasiochie is the central identity throughout; Afrik-Vine Tech LTD is a clearly-separated supporting venture shown only in its dedicated section.
 - Full stack: Next.js 16 + TypeScript + Tailwind 4 + shadcn/ui + Framer Motion + Prisma/SQLite.
 - All copy sourced directly from the v4.1 content repository.
+
+---
+Task ID: 12 (targeted correction pass)
+Agent: main
+Task: Targeted corrections per user's focused-change request (branding/name, header avatar, copy protection, slider, WhatsApp, Afrik-Vine logo swap) — no full rebuild
+
+Work Log:
+- Copied 8 uploaded JPEG assets to /public/images with exact required names: profile-main.jpeg, whatsapp-qr.jpeg, afrik-vine-logo.jpeg, me_img1-5.jpeg.
+- portfolio-data.ts: profile.name -> uppercase "OBASIOCHIE VINCENT CHIMAOBI"; added profile.heroName="VINCENT CHIMAOBI"; profile.profileImage/avatar -> /images/profile-main.jpeg; added profile.gallery (exactly 5 me_img paths); added profile.whatsapp url; afrikVine.logo -> /images/afrik-vine-logo.jpeg; added contact.whatsapp {url,qr,label,helper} with the exact wa.me link and wording.
+- globals.css: added .hero-name class (animated neon gradient movement + soft glow pulse keyframes, reduced-motion guard) for the premium hero name; added copy-protection CSS (body user-select:none + img -webkit-user-drag:none) with input/textarea/select re-enabled, plus .ownership-notice watermark style.
+- New animated-name.tsx: AnimatedHeroName renders "VINCENT CHIMAOBI" as two stacked bold lines with a per-letter premium entrance (fade + slide up + blur-to-sharp + scale settle = "forms into" the name) then continuous gradient movement + glow pulse via .hero-name.
+- New hero-slider.tsx: premium 5-image slider (me_img1-5.jpeg) with crossfade + ken-burns, autoplay (4.8s) with pause on hover/focus/lightbox, neon prev/next + dot indicators, slide counter + caption, lightbox/modal pop-up, keyboard (arrows/esc) + touch swipe (framer-motion drag), image dragging disabled.
+- hero.tsx: replaced static single profile image with HeroSlider; replaced {profile.name} headline with <AnimatedHeroName/>; removed the floating glass name badge inside the visual card (small duplicate name caption).
+- about.tsx: removed the small name+role caption from the photo card (kept the image); image now has draggable=false.
+- nav.tsx + footer.tsx: replaced the "OVC" monogram span with a circular profile-main.jpeg avatar (rounded-full, violet ring); header name text now uppercase profile.name.
+- contact.tsx: added a WhatsApp card (emerald-accented) with the whatsapp-qr.jpeg image + a WhatsApp button linking to https://wa.me/message/BS2I4XH5NM3CH1 and the exact wording "Prefer WhatsApp? Scan the QR code or tap the WhatsApp button to start a direct conversation." Added inline WhatsAppIcon SVG.
+- New site-protection.tsx + added to layout.tsx: disables right-click context menu on public content (form fields exempt), blocks image dragging, blocks copy/cut on body text (form fields usable), blocks Ctrl+S/P/U, renders subtle fixed ownership watermark "© OBASIOCHIE VINCENT CHIMAOBI". Contact form/links/WhatsApp/navigation all remain fully usable.
+- favicon.svg left as the personal neon "O" monogram (NOT Afrik-Vine).
+
+Verification (Agent Browser + VLM + DB):
+- Lint clean; all routes 200/201; no console/runtime errors.
+- Hero h1 text = "VINCENT CHIMAOBI" (uppercase, bold, dominant) with premium gradient + neon glow (VLM-confirmed).
+- Header avatar img src = /images/profile-main.jpeg; header name text = "OBASIOCHIE VINCENT CHIMAOBI" (uppercase).
+- Slider: exactly 5 dot indicators (Go to photo 1..5); clicking dot 5 shows me_img5.jpeg; next/prev/lightbox buttons present; autoplay advancing.
+- About photo card: name caption removed (card now has only the img child).
+- Afrik-Vine logo: appears ONLY in #afrik-vine section, src = afrik-vine-logo.jpeg (1 instance site-wide). Branding separation preserved.
+- WhatsApp: QR (/images/whatsapp-qr.jpeg) + button (wa.me/message/BS2I4XH5NM3CH1) + exact wording present in #contact.
+- Protection: right-click blocked on body text; form inputs remain selectable; ownership watermark present.
+- Contact form end-to-end: filled + submitted -> "Message Sent" + 201 + DB row persisted (2 total messages). Protection did NOT break form/links/navigation.
+
+Stage Summary:
+- Focused, surgical edits only — no full rebuild; existing structure, content, routing, animations, styling system, backend/admin, and page hierarchy all preserved.
+- New assets in /public/images/: profile-main.jpeg, whatsapp-qr.jpeg, afrik-vine-logo.jpeg, me_img1-5.jpeg.
+- Obasiochie is the sole global identity; Afrik-Vine logo confined to its dedicated section.

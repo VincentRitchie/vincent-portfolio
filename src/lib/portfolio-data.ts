@@ -5,8 +5,11 @@
  */
 
 export const profile = {
-  name: "Obasiochie Vincent Chimaobi",
-  shortName: "Obasiochie",
+  // Primary personal identity — displayed in uppercase everywhere it appears as the main identity.
+  name: "OBASIOCHIE VINCENT CHIMAOBI",
+  // Homepage hero animated name only (rule: large main animated name shows only "VINCENT CHIMAOBI").
+  heroName: "VINCENT CHIMAOBI",
+  shortName: "OBASIOCHIE",
   initials: "OVC",
   role: "AI Evaluation & Data Annotation Specialist",
   location: "Abuja, FCT, Nigeria",
@@ -19,7 +22,18 @@ export const profile = {
     "OBASIOCHIE VINCENT CHIMAOBI is an AI Evaluation and Data Annotation Specialist based in Abuja, Nigeria. His work sits at the intersection of AI response evaluation, prompt engineering, structured research, generative AI workflows, technical documentation, web development, and cybersecurity-informed analysis.",
   longBio:
     "OBASIOCHIE VINCENT CHIMAOBI is a technology professional with experience in AI response evaluation, data annotation, prompt evaluation, generative AI workflows, research, AI-assisted content systems, technical documentation, web development thinking, and security research. His professional strength is the ability to read requirements carefully, separate evidence from assumption, identify weak reasoning, and communicate findings in a structured and practical way.",
-  profileImage: "/images/obasiochie-profile.jpg",
+  // Professional photographs — profile-main.jpeg is the official header avatar.
+  profileImage: "/images/profile-main.jpeg",
+  avatar: "/images/profile-main.jpeg",
+  // Premium hero/about showcase slider — exactly five professional photographs.
+  gallery: [
+    "/images/me_img1.jpeg",
+    "/images/me_img2.jpeg",
+    "/images/me_img3.jpeg",
+    "/images/me_img4.jpeg",
+    "/images/me_img5.jpeg",
+  ],
+  whatsapp: "https://wa.me/message/BS2I4XH5NM3CH1",
   email: "vincentchimaobi.ai@gmail.com",
   phone: "+234 906 825 4110",
   twitter: "cyb3rghoxt",
@@ -558,7 +572,7 @@ export const projects = [
 export const afrikVine = {
   name: "Afrik-Vine Tech LTD",
   tagline: "Creativity · Futuristic · Legacy",
-  logo: "/images/afrik-vine-logo.png",
+  logo: "/images/afrik-vine-logo.jpeg",
   headline: "Afrik-Vine Tech LTD: Creativity, Futuristic Thinking & Digital Legacy",
   intro:
     "Afrik-Vine Tech LTD is being developed as a forward-looking technology brand connected to my professional work in AI, web development, digital strategy, content systems, and security-informed technical services. The brand is guided by three words: Creativity, Futuristic, and Legacy.",
@@ -635,6 +649,13 @@ export const contact = {
     { label: "X / Twitter", value: "@cyb3rghoxt", href: "https://x.com/cyb3rghoxt", icon: "Twitter" },
     { label: "GitHub", value: "@vin_chimaobi042", href: "https://github.com/vin_chimaobi042", icon: "Github" },
   ],
+  whatsapp: {
+    url: "https://wa.me/message/BS2I4XH5NM3CH1",
+    qr: "/images/whatsapp-qr.jpeg",
+    label: "Chat on WhatsApp",
+    helper:
+      "Prefer WhatsApp? Scan the QR code or tap the WhatsApp button to start a direct conversation.",
+  },
   inquiryGuidance: [
     { type: "AI evaluation or data annotation", body: "Please include the role type, task expectations, region eligibility requirements, and any assessment or onboarding steps." },
     { type: "Web development inquiries", body: "Please include the type of website needed, target audience, preferred features, content availability, timeline, budget range if available, and whether admin editing is required." },

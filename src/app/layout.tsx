@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { SiteProtection } from "@/components/portfolio/site-protection";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -69,6 +70,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster position="bottom-right" theme="dark" richColors closeButton />
+        <SiteProtection />
       </body>
     </html>
   );

@@ -288,3 +288,89 @@
   animation: shine 6s ease-in-out infinite;
   pointer-events: none;
 }
+
+/* ============================================================
+   HERO ANIMATED NAME — premium entrance + continuous effects
+   Gradient movement + soft neon glow pulse (subtle, professional)
+   ============================================================ */
+.hero-name {
+  position: relative;
+  display: block;
+  background: linear-gradient(
+    100deg,
+    #e9d5ff 0%,
+    #f0abfc 22%,
+    #93c5fd 48%,
+    #f0abfc 74%,
+    #e9d5ff 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: hero-gradient 7s linear infinite, hero-glow 4.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 22px rgba(217, 70, 239, 0.35));
+  will-change: background-position, filter;
+}
+/* Each letter inherits the transparent fill so the parent gradient shows through */
+.hero-name > span > span,
+.hero-name span {
+  -webkit-text-fill-color: transparent;
+}
+@keyframes hero-gradient {
+  to { background-position: 220% center; }
+}
+@keyframes hero-glow {
+  0%, 100% { filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.30)); }
+  50% { filter: drop-shadow(0 0 32px rgba(217, 70, 239, 0.55)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-name { animation: none; }
+}
+
+/* ============================================================
+   COPY / SCREENSHOT PROTECTION (discourages casual copying)
+   - blocks text selection on public content (form fields exempt)
+   - blocks image dragging
+   - JS in SiteProtection handles contextmenu / copy / save / print keys
+   ============================================================ */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+/* Keep form fields, contact inputs and editable areas fully usable */
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable=""] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+/* Discourage image dragging — clicks/links still work */
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+/* Ownership watermark — subtle, non-blocking */
+.ownership-notice {
+  position: fixed;
+  bottom: 0.5rem;
+  left: 0.625rem;
+  z-index: 40;
+  pointer-events: none;
+  user-select: none;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.10);
+}
+@media (max-width: 640px) {
+  .ownership-notice { display: none; }
+}
+
