@@ -42,6 +42,9 @@ import {
   Layers,
   Rocket,
   Eye,
+  User,
+  Link,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -87,6 +90,9 @@ export const iconMap: Record<string, LucideIcon> = {
   Layers,
   Rocket,
   Eye,
+  User,
+  Link,
+  Zap,
 };
 
 export function Icon({

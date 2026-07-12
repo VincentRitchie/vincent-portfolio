@@ -133,7 +133,7 @@ export function Hero({ profile = defaultProfile }: { profile?: ProfileLike } = {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Sparkles className="h-4 w-4 text-fuchsia-300" />
-              Remotasks · TELUS Digital · Upwork
+              Upwork
             </span>
           </motion.div>
         </div>

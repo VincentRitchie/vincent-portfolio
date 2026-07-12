@@ -18,11 +18,11 @@ type ProfileLike = typeof defaultProfile;
  * - Exactly five images (me_img1.jpeg … me_img5.jpeg)
  */
 const captions = [
-  "Professional Portrait",
-  "AI Evaluation & Prompt Engineering",
-  "Generative AI & Creative Direction",
-  "Security-Informed Analysis",
-  "Web Development Practice",
+  "LLM Prompt Engineering Training",
+  "Web Development Workspace",
+  "Client Project Analysis Session",
+  "Student Training Session",
+  "Lifestyle Portrait",
 ];
 
 export function HeroSlider({ profile = defaultProfile }: { profile?: ProfileLike } = {}) {
