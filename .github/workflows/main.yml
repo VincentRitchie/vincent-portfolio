@@ -29,7 +29,24 @@ jobs:
         run: bun install
 
       - name: Build static site
-        run: REPO_NAME=${{ github.event.repository.name }} bash .zscripts/build.sh
+        run: REPO_NAME=${{ github.event.repository.name }} bash scripts/build-static.sh
+
+      - name: Verify build output
+        run: |
+          echo "=== Checking for ./out ==="
+          if [ -d out ]; then
+            echo "✅ ./out exists"
+            ls -la out/
+            if [ -f out/index.html ]; then
+              echo "✅ out/index.html exists"
+            else
+              echo "❌ out/index.html NOT found"
+              exit 1
+            fi
+          else
+            echo "❌ ./out does NOT exist — build failed"
+            exit 1
+          fi
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3

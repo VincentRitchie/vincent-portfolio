@@ -133,12 +133,45 @@ let cache: { at: number; data: MergedContent } | null = null;
 const CACHE_TTL_MS = 3000;
 
 export async function getMergedContent(): Promise<MergedContent> {
+  // Static export mode (GitHub Pages): return pure fallback — no DB access.
+  if (process.env.NEXT_PUBLIC_STATIC_EXPORT === "true") {
+    return buildStaticContent();
+  }
   if (cache && Date.now() - cache.at < CACHE_TTL_MS) {
     return cache.data;
   }
   const data = await buildContent();
   cache = { at: Date.now(), data };
   return data;
+}
+
+function buildStaticContent(): MergedContent {
+  const profile: PublicProfile = {
+    ...fallbackProfile,
+    cvPath: null,
+    whatsappQrPath: "/images/whatsapp-qr.jpeg",
+    afrikVineLogoPath: fallbackAfrikVine.logo,
+  };
+  const afrikVine: PublicAfrikVine = {
+    ...fallbackAfrikVine,
+    logo: fallbackAfrikVine.logo,
+    registrationNumber: null,
+  };
+  const projects: PublicProject[] = fallbackProjects.map((p, i) => ({
+    id: `seed-${i}`, title: p.title, slug: slugify(p.title), category: p.category,
+    status: p.status, summary: p.summary, description: p.value, placeholder: !!p.placeholder,
+    imageUrl: null, externalUrl: null, order: i, icon: p.icon, accent: p.accent,
+    focus: p.focus, value: p.value,
+  }));
+  const skills: PublicSkill[] = fallbackExpertise.map((c) => ({
+    id: `seed-${c.title}`, title: c.title, description: c.body, body: c.body,
+    icon: c.icon, accent: c.accent,
+    category: c.href?.replace("#", "") ?? "general", href: c.href ?? "#expertise",
+  }));
+  return {
+    profile, afrikVine, projects, articles: [], skills,
+    certifications: [], testimonials: [], achievements: [],
+  };
 }
 
 export function clearContentCache() {
