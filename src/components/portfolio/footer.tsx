@@ -2,6 +2,7 @@
 
 import { footer, profile as defaultProfile } from "@/lib/portfolio-data";
 import { ArrowUp, Mail, Phone, MapPin, Twitter, Github } from "lucide-react";
+import { assetPath } from "@/lib/asset-path";
 
 type ProfileLike = typeof defaultProfile;
 
@@ -29,7 +30,7 @@ export function Footer({ profile = defaultProfile }: { profile?: ProfileLike } =
             <div className="flex items-center gap-3">
               <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-violet-400/50 bg-gradient-to-br from-violet-600/30 to-fuchsia-600/30">
                 <img
-                  src={profile.avatar}
+                  src={assetPath(profile.avatar)}
                   alt=""
                   className="h-full w-full object-cover"
                   draggable={false}

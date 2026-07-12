@@ -3,6 +3,7 @@
 import { Reveal, Section, SectionHeading, GlowCard, accentMap } from "./shared";
 import { about, profile as defaultProfile } from "@/lib/portfolio-data";
 import { Quote, Target, Compass, Layers } from "lucide-react";
+import { assetPath } from "@/lib/asset-path";
 
 type ProfileLike = typeof defaultProfile;
 
@@ -24,7 +25,7 @@ export function About({ profile = defaultProfile }: { profile?: ProfileLike } = 
                 {/* Profile portrait — small duplicate name caption removed (header name is the identity) */}
                 <div className="overflow-hidden rounded-2xl border border-border bg-card">
                   <img
-                    src={profile.profileImage}
+                    src={assetPath(profile.profileImage)}
                     alt={`${profile.name} — professional portrait`}
                     className="aspect-[4/5] w-full object-cover"
                     loading="lazy"

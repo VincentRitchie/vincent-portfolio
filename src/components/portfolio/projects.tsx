@@ -3,6 +3,7 @@
 import { Reveal, Section, SectionHeading, GlowCard, Icon, accentMap, type Accent } from "./shared";
 import { projects as defaultProjects } from "@/lib/portfolio-data";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { assetPath } from "@/lib/asset-path";
 
 type ProjectItem = typeof defaultProjects[number];
 

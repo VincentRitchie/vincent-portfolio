@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Send, CheckCircle2, Loader2, ShieldCheck, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { assetPath } from "@/lib/asset-path";
 
 type Status = "idle" | "loading" | "success";
 
@@ -166,7 +167,7 @@ export function Contact({
                   <div className="relative shrink-0">
                     <div className="absolute -inset-2 rounded-2xl bg-emerald-500/15 blur-xl" />
                     <img
-                      src={contact.whatsapp.qr}
+                      src={assetPath(contact.whatsapp.qr)}
                       alt="WhatsApp QR code — scan to start a direct conversation"
                       className="relative h-28 w-28 rounded-xl border border-emerald-400/40 bg-white p-1.5 object-contain"
                       draggable={false}

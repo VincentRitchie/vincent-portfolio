@@ -5,6 +5,7 @@ import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, Expand, Pause, Play } from "lucide-react";
 import { profile as defaultProfile } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
+import { assetPath } from "@/lib/asset-path";
 
 type ProfileLike = typeof defaultProfile;
 
@@ -96,7 +97,7 @@ export function HeroSlider({ profile = defaultProfile }: { profile?: ProfileLike
               className="absolute inset-0 cursor-grab active:cursor-grabbing"
             >
               <motion.img
-                src={slides[index]}
+                src={assetPath(slides[index])}
                 alt={`${profile.name} — ${captions[index]}`}
                 className="h-full w-full select-none object-cover"
                 loading={index === 0 ? "eager" : "lazy"}
@@ -217,7 +218,7 @@ export function HeroSlider({ profile = defaultProfile }: { profile?: ProfileLike
               className="relative max-h-[85vh] max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-card shadow-[0_0_60px_-12px_rgba(217,70,239,0.5)]"
             >
               <img
-                src={slides[index]}
+                src={assetPath(slides[index])}
                 alt={`${profile.name} — ${captions[index]}`}
                 className="max-h-[78vh] w-full object-contain"
                 draggable={false}

@@ -6,6 +6,7 @@ import { profile as defaultProfile } from "@/lib/portfolio-data";
 import { GlowOrb } from "./shared";
 import { AnimatedHeroName } from "./animated-name";
 import { HeroSlider } from "./hero-slider";
+import { assetPath } from "@/lib/asset-path";
 
 const scrollTo = (href: string) => {
   document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });

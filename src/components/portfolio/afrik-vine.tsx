@@ -3,6 +3,7 @@
 import { Reveal, Section, SectionHeading, accentMap } from "./shared";
 import { afrikVine as defaultAfrikVine } from "@/lib/portfolio-data";
 import { Rocket, Eye, Target, Layers, ArrowRight, Sparkles } from "lucide-react";
+import { assetPath } from "@/lib/asset-path";
 
 type AfrikVineLike = typeof defaultAfrikVine;
 
@@ -41,7 +42,7 @@ export function AfrikVine({ afrikVine = defaultAfrikVine }: { afrikVine?: AfrikV
               <div className="absolute -inset-6 -z-10 rounded-full bg-gradient-to-tr from-violet-600/30 to-fuchsia-600/25 blur-2xl" />
               <div className="overflow-hidden rounded-3xl border border-violet-400/30 bg-card/60 p-2 backdrop-blur-sm">
                 <img
-                  src={afrikVine.logo}
+                  src={assetPath(afrikVine.logo)}
                   alt="Afrik-Vine Tech LTD — company logo"
                   className="h-40 w-40 rounded-2xl object-cover sm:h-48 sm:w-48"
                   loading="lazy"
