@@ -10,9 +10,9 @@ export function Footer({ profile = defaultProfile }: { profile?: ProfileLike } =
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const publicEmail = (profile as { publicEmail?: string }).publicEmail ?? profile.email;
   const socials = [
-    { label: "Email", href: `mailto:${profile.email}`, icon: Mail },
-    { label: "Phone", href: `tel:${profile.phone.replace(/\s/g, "")}`, icon: Phone },
+    { label: "Email", href: `mailto:${publicEmail}`, icon: Mail },
     { label: "X / Twitter", href: `https://x.com/${profile.twitter}`, icon: Twitter },
     { label: "GitHub", href: `https://github.com/${profile.github}`, icon: Github },
   ];

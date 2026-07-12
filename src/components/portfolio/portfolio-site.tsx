@@ -53,6 +53,7 @@ export interface PortfolioSiteContent {
     twitter: string;
     github: string;
     linkedin: string | null;
+    publicEmail: string;
     cvPath: string | null;
     whatsappQrPath: string;
     afrikVineLogoPath: string;
