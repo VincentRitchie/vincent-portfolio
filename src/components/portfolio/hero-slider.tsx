@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, Expand, Pause, Play } from "lucide-react";
-import { profile } from "@/lib/portfolio-data";
+import { profile as defaultProfile } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
+
+type ProfileLike = typeof defaultProfile;
 
 /**
  * Premium 5-image showcase slider for the hero/about visual area.
@@ -23,7 +25,7 @@ const captions = [
   "Web Development Practice",
 ];
 
-export function HeroSlider() {
+export function HeroSlider({ profile = defaultProfile }: { profile?: ProfileLike } = {}) {
   const slides = profile.gallery;
   const count = slides.length;
   const [index, setIndex] = useState(0);

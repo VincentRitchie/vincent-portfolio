@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown, Sparkles, MapPin } from "lucide-react";
-import { profile } from "@/lib/portfolio-data";
+import { profile as defaultProfile } from "@/lib/portfolio-data";
 import { GlowOrb } from "./shared";
 import { AnimatedHeroName } from "./animated-name";
 import { HeroSlider } from "./hero-slider";
@@ -24,7 +24,12 @@ const techTicker = [
   "Responsible Disclosure",
 ];
 
-export function Hero() {
+type ProfileLike = typeof defaultProfile & {
+  cvPath?: string | null;
+};
+
+export function Hero({ profile = defaultProfile }: { profile?: ProfileLike } = {}) {
+  const cvPath = (profile as ProfileLike).cvPath ?? null;
   return (
     <section
       id="home"
@@ -98,6 +103,15 @@ export function Hero() {
             >
               Contact Me
             </button>
+            {cvPath && (
+              <a
+                href={cvPath}
+                download
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-3 text-sm font-semibold text-emerald-200 backdrop-blur-sm transition-all hover:bg-emerald-500/20"
+              >
+                Download CV
+              </a>
+            )}
             <button
               onClick={() => scrollTo("#projects")}
               className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
@@ -137,7 +151,7 @@ export function Hero() {
             <div className="absolute -inset-1 -z-10 rounded-[2.2rem] bg-gradient-to-tr from-violet-500 via-fuchsia-500 to-sky-500 opacity-60 blur-md" />
 
             {/* Slider — no internal name caption (the small duplicate was removed) */}
-            <HeroSlider />
+            <HeroSlider profile={profile} />
 
             {/* down-arrow — kept for navigation */}
             <button

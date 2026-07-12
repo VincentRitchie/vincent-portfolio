@@ -1,10 +1,12 @@
 "use client";
 
 import { Reveal, Section, SectionHeading, GlowCard, accentMap } from "./shared";
-import { about, profile } from "@/lib/portfolio-data";
+import { about, profile as defaultProfile } from "@/lib/portfolio-data";
 import { Quote, Target, Compass, Layers } from "lucide-react";
 
-export function About() {
+type ProfileLike = typeof defaultProfile;
+
+export function About({ profile = defaultProfile }: { profile?: ProfileLike } = {}) {
   return (
     <Section id="about">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

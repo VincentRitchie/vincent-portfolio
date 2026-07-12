@@ -1,9 +1,11 @@
 "use client";
 
-import { footer, profile } from "@/lib/portfolio-data";
+import { footer, profile as defaultProfile } from "@/lib/portfolio-data";
 import { ArrowUp, Mail, Phone, MapPin, Twitter, Github } from "lucide-react";
 
-export function Footer() {
+type ProfileLike = typeof defaultProfile;
+
+export function Footer({ profile = defaultProfile }: { profile?: ProfileLike } = {}) {
   const scrollTo = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };

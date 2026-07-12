@@ -4,10 +4,38 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ['query'],
-  })
+/**
+ * NOTE: After running `prisma generate` to add new models, the dev server may
+ * hold an outdated PrismaClient class in its module cache. If the existing
+ * global client is missing any required models, we discard it and build a
+ * fresh one. A full dev-server restart is the cleanest fix; this defensive
+ * check covers the common HMR case.
+ */
+const REQUIRED_MODELS = [
+  'siteSetting', 'companyInfo', 'project', 'article',
+  'certification', 'skill', 'testimonial', 'achievement',
+  'mediaAsset', 'contactMessage',
+] as const
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+function hasAllModels(client: PrismaClient): boolean {
+  return REQUIRED_MODELS.every(
+    (n) => typeof (client as unknown as Record<string, unknown>)[n] !== 'undefined'
+  )
+}
+
+function makeClient(): PrismaClient {
+  return new PrismaClient({ log: ['query'] })
+}
+
+let db: PrismaClient
+if (globalForPrisma.prisma && hasAllModels(globalForPrisma.prisma)) {
+  db = globalForPrisma.prisma
+} else {
+  if (globalForPrisma.prisma) {
+    void globalForPrisma.prisma.$disconnect().catch(() => {})
+  }
+  db = makeClient()
+  if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+}
+
+export { db }

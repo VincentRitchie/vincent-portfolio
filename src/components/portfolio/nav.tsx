@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { navItems, profile } from "@/lib/portfolio-data";
+import { navItems, profile as defaultProfile } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+type ProfileLike = typeof defaultProfile;
+
+export function Navbar({ profile = defaultProfile }: { profile?: ProfileLike } = {}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("home");

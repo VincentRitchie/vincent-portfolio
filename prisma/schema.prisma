@@ -6,6 +6,8 @@ generator client {
 }
 
 datasource db {
+  // Dev = sqlite. For production, switch to "postgresql", set a Postgres DATABASE_URL,
+  // and run `bun run db:migrate`. See README-ADMIN.md for the migration workflow.
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
@@ -41,4 +43,131 @@ model ContactMessage {
 
   @@index([createdAt])
   @@index([inquiryType])
+}
+
+/// Site-wide settings — singleton row (id = "1")
+model SiteSetting {
+  id               String   @id @default("1")
+  name             String?
+  heroName         String?
+  role             String?
+  summary          String?
+  email            String?
+  phone            String?
+  whatsappLink     String?
+  whatsappQrPath   String?
+  socialLinks      String? // JSON string — see src/lib/content.ts
+  footerText       String?
+  seoTitle         String?
+  seoDescription   String?
+  profileImagePath String?
+  cvPath           String?
+  afrikVineLogoPath String?
+  updatedAt        DateTime @updatedAt
+}
+
+/// Afrik-Vine company info — singleton row (id = "1")
+model CompanyInfo {
+  id                 String   @id @default("1")
+  description        String?
+  mission            String?
+  vision             String?
+  roadmap            String?
+  registrationNumber String?
+  values             String? // JSON string
+  services           String? // JSON string
+  updatedAt          DateTime @updatedAt
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  category       String?
+  summary        String?
+  description    String?
+  status         String   @default("Completed")
+  placeholder    Boolean  @default(false)
+  imageUrl       String?
+  caseStudyBody  String?
+  externalUrl    String?
+  icon           String?
+  accent         String?
+  tags           String?  // JSON array of focus tags
+  order          Int      @default(0)
+  visible        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Article {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  excerpt       String?
+  body          String?
+  category      String?
+  status        String    @default("draft")
+  featuredImage String?
+  seoTitle      String?
+  seoDescription String?
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Certification {
+  id              String   @id @default(cuid())
+  title           String
+  issuer          String?
+  year            String?
+  credentialLink  String?
+  visible         Boolean  @default(true)
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  icon        String?
+  accent      String?
+  category    String?
+  order       Int      @default(0)
+  visible     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  quote     String?
+  visible   Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  title       String
+  metric      String?
+  description String?
+  year        String?
+  visible     Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  filename  String
+  path      String
+  type      String?
+  createdAt DateTime @default(now())
 }

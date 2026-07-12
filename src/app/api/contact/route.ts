@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { db } from "@/lib/db";
+import { authOptions } from "@/lib/auth";
+import {
+  rateLimitCheck,
+  honeypotFailed,
+  sanitizeText,
+  verifyTurnstile,
+  getClientIP,
+} from "@/lib/spam";
+import { sendContactNotification } from "@/lib/email";
 
 const VALID_INQUIRY_TYPES = [
   "AI Evaluation / AI Training Role",
@@ -15,6 +25,18 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIP(req);
+
+    // ---- Rate limit ----
+    const rl = rateLimitCheck(ip);
+    if (!rl.ok) {
+      const mins = Math.ceil((rl.retryAfterMs ?? 0) / 60000);
+      return NextResponse.json(
+        { error: `Too many submissions. Please try again in ~${mins} minute(s).` },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json().catch(() => null);
     if (!body || typeof body !== "object") {
       return NextResponse.json(
@@ -23,11 +45,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const name = String(body.name ?? "").trim();
+    // ---- Honeypot ----
+    if (honeypotFailed(body.website)) {
+      // Pretend success to bots — don't leak that they were caught.
+      return NextResponse.json(
+        { success: true, message: "Your message has been received. Thank you for reaching out." },
+        { status: 201 }
+      );
+    }
+
+    // ---- Optional Turnstile ----
+    const turnstileOk = await verifyTurnstile(body.captchaToken, ip);
+    if (!turnstileOk) {
+      return NextResponse.json(
+        { error: "Spam verification failed. Please refresh and try again." },
+        { status: 400 }
+      );
+    }
+
+    // ---- Sanitize + validate ----
+    const name = sanitizeText(body.name);
     const email = String(body.email ?? "").trim();
-    const company = body.company ? String(body.company).trim() : null;
+    const company = body.company ? sanitizeText(body.company) : null;
     const inquiryType = String(body.inquiryType ?? "").trim();
-    const message = String(body.message ?? "").trim();
+    const message = sanitizeText(body.message);
     const preferredResponse = String(body.preferredResponse ?? "Email").trim();
 
     if (!name || name.length < 2) {
@@ -66,6 +107,17 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // ---- Email notification (always best-effort; never throws) ----
+    await sendContactNotification({
+      name,
+      email,
+      company,
+      inquiryType,
+      message,
+      preferredResponse,
+      submittedAt: record.createdAt.toISOString(),
+    }).catch((err) => console.error("[contact] notification swallowed:", err));
+
     return NextResponse.json(
       {
         success: true,
@@ -84,16 +136,22 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  // PROTECTED — admin only.
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const messages = await db.contactMessage.findMany({
       orderBy: { createdAt: "desc" },
-      take: 50,
+      take: 100,
       select: {
         id: true,
         name: true,
         email: true,
         company: true,
         inquiryType: true,
+        message: true,
         preferredResponse: true,
         isRead: true,
         createdAt: true,

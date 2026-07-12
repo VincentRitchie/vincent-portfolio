@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Reveal, Section, SectionHeading, Icon } from "./shared";
-import { contact } from "@/lib/portfolio-data";
+import { contact as defaultContact, profile as defaultProfile } from "@/lib/portfolio-data";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Send, CheckCircle2, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import { Send, CheckCircle2, Loader2, ShieldCheck, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 type Status = "idle" | "loading" | "success";
+
+type ProfileLike = typeof defaultProfile & {
+  cvPath?: string | null;
+};
+type ContactLike = typeof defaultContact;
 
 /* WhatsApp brand glyph (lucide has no brand icon) */
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -32,7 +37,14 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function Contact() {
+export function Contact({
+  contact = defaultContact,
+  profile = defaultProfile,
+}: {
+  contact?: ContactLike;
+  profile?: ProfileLike;
+} = {}) {
+  const cvPath = (profile as ProfileLike).cvPath ?? null;
   const [status, setStatus] = useState<Status>("idle");
   const [form, setForm] = useState({
     name: "",
@@ -41,6 +53,7 @@ export function Contact() {
     inquiryType: "",
     message: "",
     preferredResponse: "Email",
+    website: "",
   });
 
   const update = (key: keyof typeof form, value: string) =>
@@ -72,6 +85,7 @@ export function Contact() {
         inquiryType: "",
         message: "",
         preferredResponse: "Email",
+        website: "",
       });
     } catch (err) {
       setStatus("idle");
@@ -204,6 +218,44 @@ export function Contact() {
                 </p>
               </div>
             </Reveal>
+
+            {cvPath ? (
+              <Reveal delay={0.2}>
+                <div className="rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.06] p-5">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-emerald-400/30 bg-emerald-500/15 text-emerald-300">
+                      <FileText className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-emerald-200">Download CV / Résumé</p>
+                      <p className="text-xs text-muted-foreground">Full PDF overview of experience and skills.</p>
+                    </div>
+                    <a
+                      href={cvPath}
+                      download
+                      className="inline-flex shrink-0 items-center gap-2 rounded-full bg-emerald-500/20 px-4 py-2 text-xs font-semibold text-emerald-100 transition-all hover:bg-emerald-500/30"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      Download
+                    </a>
+                  </div>
+                </div>
+              </Reveal>
+            ) : (
+              <Reveal delay={0.2}>
+                <div className="rounded-2xl border border-dashed border-border bg-card/30 p-5">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-border bg-background/40 text-muted-foreground">
+                      <FileText className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-muted-foreground">CV coming soon</p>
+                      <p className="text-xs text-muted-foreground">A downloadable résumé will be available here shortly.</p>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            )}
           </div>
 
           {/* Right: contact form */}
@@ -212,6 +264,18 @@ export function Contact() {
               onSubmit={handleSubmit}
               className="rounded-2xl border border-border bg-card/50 p-6 backdrop-blur-sm sm:p-8"
             >
+              {/* Honeypot — hidden from humans, bots fill it in. */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={form.website}
+                onChange={(e) => update("website", e.target.value)}
+                className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                aria-label="Please leave this field empty"
+              />
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <label htmlFor="name" className="text-xs font-medium text-foreground">

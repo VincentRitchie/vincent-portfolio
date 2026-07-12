@@ -1,10 +1,12 @@
 "use client";
 
 import { Reveal, Section, SectionHeading, GlowCard, Icon, accentMap, type Accent } from "./shared";
-import { projects } from "@/lib/portfolio-data";
+import { projects as defaultProjects } from "@/lib/portfolio-data";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 
-export function Projects() {
+type ProjectItem = typeof defaultProjects[number];
+
+export function Projects({ projects = defaultProjects }: { projects?: ProjectItem[] } = {}) {
   return (
     <Section id="projects" className="border-t border-border/40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

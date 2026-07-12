@@ -104,3 +104,34 @@ Stage Summary:
 - Focused, surgical edits only — no full rebuild; existing structure, content, routing, animations, styling system, backend/admin, and page hierarchy all preserved.
 - New assets in /public/images/: profile-main.jpeg, whatsapp-qr.jpeg, afrik-vine-logo.jpeg, me_img1-5.jpeg.
 - Obasiochie is the sole global identity; Afrik-Vine logo confined to its dedicated section.
+
+---
+Task ID: 13 (backend/admin upgrade)
+Agent: full-stack-developer (subagent) + main (verification + docs + fixes)
+Task: Add admin auth, CMS, secure contact system, spam protection, email notification, durable DB prep, file uploads, CV system, admin dashboard — preserving existing frontend
+
+Work Log:
+- Subagent implemented the full backend/admin layer: NextAuth v4 credentials auth (src/lib/auth.ts + [...nextauth] route + src/middleware.ts), 9 new Prisma models (SiteSetting, CompanyInfo, Project, Article, Certification, Skill, Testimonial, Achievement, MediaAsset), content layer (src/lib/content.ts) merging DB-over-portfolio-data.ts fallback, spam lib (honeypot + in-memory rate limit + optional Turnstile), email lib (Resend REST + SMTP nodemailer, best-effort), upload lib (local public/uploads with type+size validation), seed script (prisma/seed.ts), hash-password script (scripts/hash-password.ts), .env + .env.example.
+- 12 admin routes under /admin (login, dashboard, messages, site-settings, profile-media, company, projects, articles, skills, certifications, testimonials, achievements) with protected layout + shared admin components.
+- 20+ API routes: contact (POST public, GET/PATCH/DELETE admin), content (GET public), auth/[...nextauth], admin upload, admin cv, admin site-settings/company/projects/articles/skills/certifications/testimonials/achievements/media.
+- Public integration: page.tsx converted to server component calling getMergedContent(); section components refactored to accept content props with portfolio-data.ts defaults; new optional sections (certifications, testimonials, achievements) render only if DB has visible items.
+- Old "Hello world" /api placeholder removed.
+- Main agent: ran db:push + seed (SiteSetting, CompanyInfo, 5 Projects, 10 Skills, 3 draft Articles seeded; Certs/Testimonials/Achievements empty), restarted dev server to reload Prisma client, created README-ADMIN.md, verified end-to-end.
+
+Verification (curl + Agent Browser + DB inspection):
+- Lint clean. Dev server compiles. Public homepage 200.
+- GET /api/contact unauth → 401 (no longer public). /admin unauth → 307 (protected). /admin/login → 200.
+- /api/content → 200 returns seeded DB content (profile.name, 5 projects, 10 skills).
+- Admin login flow: admin@obasiochie.dev / changeme123 → redirected to /admin dashboard (counts, nav, quick actions).
+- Messages inbox: lists 4 messages, UNREAD/READ badges, Mark read/unread works, Delete works, Reply-by-email mailto: link uses sender email + prefilled subject.
+- Site settings CMS: edited role field → saved with success toast → content API + public homepage reflected the edited value → reset to original.
+- Projects admin: shows 5 seeded projects with edit/delete + "Add project".
+- Contact POST: saves to DB (201) + best-effort email. Honeypot: returns fake 201 but does NOT save the message (verified — bot message absent from DB).
+- CV: uploaded test PDF → stored at /uploads/cv/... → cvPath in DB → CV file serves 200 → content API exposes cvPath for the public Download CV button.
+- Branding separation preserved: Afrik-Vine logo confined to #afrik-vine section only. Header avatar = profile-main.jpeg. Hero name = "VINCENT CHIMAOBI".
+
+Stage Summary:
+- Full admin/CMS backend layered on top of the preserved frontend.
+- Dev admin credentials in .env: admin@obasiochie.dev / changeme123 (REPLACE in production via ADMIN_PASSWORD_HASH).
+- Known limitations: in-memory rate limit (not durable across serverless instances), local uploads ephemeral on serverless (use Vercel Blob/Cloudinary/S3 in prod), SQLite dev-only (switch to Postgres for prod), screenshot protection not possible on web.
+- README-ADMIN.md documents setup, migration, seed, login, email, uploads, deployment, security, limitations.

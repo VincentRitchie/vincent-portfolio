@@ -1,10 +1,12 @@
 "use client";
 
 import { Reveal, Section, SectionHeading, GlowCard, Icon, accentMap } from "./shared";
-import { expertiseCards, expertiseIntegration, selectedHighlights } from "@/lib/portfolio-data";
+import { expertiseCards as defaultExpertiseCards, expertiseIntegration, selectedHighlights } from "@/lib/portfolio-data";
 import { CheckCircle2, Sparkles } from "lucide-react";
 
-export function Expertise() {
+type SkillCard = typeof defaultExpertiseCards[number];
+
+export function Expertise({ skills = defaultExpertiseCards }: { skills?: SkillCard[] } = {}) {
   return (
     <Section id="expertise" className="border-t border-border/40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -23,7 +25,7 @@ export function Expertise() {
 
         {/* Expertise cards grid */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {expertiseCards.map((card, i) => {
+          {skills.map((card, i) => {
             const accent = card.accent as keyof typeof accentMap;
             const a = accentMap[accent];
             return (

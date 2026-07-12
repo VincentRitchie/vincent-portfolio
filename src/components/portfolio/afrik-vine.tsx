@@ -1,10 +1,12 @@
 "use client";
 
 import { Reveal, Section, SectionHeading, accentMap } from "./shared";
-import { afrikVine } from "@/lib/portfolio-data";
+import { afrikVine as defaultAfrikVine } from "@/lib/portfolio-data";
 import { Rocket, Eye, Target, Layers, ArrowRight, Sparkles } from "lucide-react";
 
-export function AfrikVine() {
+type AfrikVineLike = typeof defaultAfrikVine;
+
+export function AfrikVine({ afrikVine = defaultAfrikVine }: { afrikVine?: AfrikVineLike } = {}) {
   return (
     <Section id="afrik-vine" className="border-t border-border/40">
       {/* deep aurora backdrop exclusive to the company section */}
