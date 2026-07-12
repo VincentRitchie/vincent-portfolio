@@ -644,7 +644,7 @@ export const contact = {
   intro:
     "If my work aligns with an opportunity, project, collaboration, or professional discussion, you can reach me through the contact details below. I am open to conversations around AI evaluation, prompt engineering, data annotation, web development, AI-assisted workflows, technical documentation, and responsible security research.",
   channels: [
-    { label: "Email", value: "vincentchimaobi.ai@gmail.com", href: "mailto:vincentchimaobi.ai@gmail.com", icon: "Mail" },
+    { label: "Email", value: "cyberghoxt.whitehat@gmail.com", href: "mailto:cyberghoxt.whitehat@gmail.com", icon: "Mail" },
     { label: "Location", value: "Abuja, FCT, Nigeria", href: null, icon: "MapPin" },
     { label: "X / Twitter", value: "@cyb3rghoxt", href: "https://x.com/cyb3rghoxt", icon: "Twitter" },
     { label: "GitHub", value: "@vin_chimaobi042", href: "https://github.com/vin_chimaobi042", icon: "Github" },
