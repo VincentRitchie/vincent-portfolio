@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requireAdmin, unauthorized, strOrNull } from "@/lib/api";
 
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, ctx: Ctx) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const { id } = await ctx.params;
     const item = await db.project.findUnique({ where: { id } });
@@ -20,8 +19,8 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
 }
 
 export async function PUT(req: NextRequest, ctx: Ctx) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const { id } = await ctx.params;
     const body = await req.json().catch(() => ({}));
@@ -53,8 +52,8 @@ export async function PUT(req: NextRequest, ctx: Ctx) {
 }
 
 export async function DELETE(_req: NextRequest, ctx: Ctx) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const { id } = await ctx.params;
     await db.project.delete({ where: { id } });
@@ -63,10 +62,4 @@ export async function DELETE(_req: NextRequest, ctx: Ctx) {
     console.error("[projects] DELETE error:", err);
     return NextResponse.json({ error: "Failed to delete." }, { status: 500 });
   }
-}
-
-function strOrNull(v: unknown): string | null {
-  if (v == null) return null;
-  const s = String(v).trim();
-  return s.length ? s : null;
 }

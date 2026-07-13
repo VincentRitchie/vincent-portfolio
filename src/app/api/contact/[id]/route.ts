@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-
-async function requireAdmin() {
-  const session = await getServerSession(authOptions);
-  if (!session) return null;
-  return session;
-}
+import { requireAdmin, unauthorized } from "@/lib/api";
 
 /** PATCH /api/contact/[id] — toggle isRead. Body: { isRead?: boolean } */
 export async function PATCH(
@@ -15,9 +8,7 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> }
 ) {
   const session = await requireAdmin();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!session) return unauthorized();
   try {
     const { id } = await context.params;
     const body = await req.json().catch(() => ({}));
@@ -40,9 +31,7 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   const session = await requireAdmin();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!session) return unauthorized();
   try {
     const { id } = await context.params;
     await db.contactMessage.delete({ where: { id } });

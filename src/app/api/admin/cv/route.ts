@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requireAdmin, unauthorized } from "@/lib/api";
 
 /**
  * GET /api/admin/cv — PUBLIC. Returns whether a CV exists and its path
@@ -22,8 +21,8 @@ export async function GET() {
  * Saves via upload lib (PDF only) and updates SiteSetting.cvPath.
  */
 export async function PUT(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const form = await req.formData().catch(() => null);
     if (!form) {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import { db } from "@/lib/db";
-import { authOptions } from "@/lib/auth";
+import { requireAdmin, unauthorized } from "@/lib/api";
 import {
   rateLimitCheck,
   honeypotFailed,
@@ -138,10 +137,8 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   // PROTECTED — admin only.
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const session = await requireAdmin();
+    if (!session) return unauthorized();
     const messages = await db.contactMessage.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,

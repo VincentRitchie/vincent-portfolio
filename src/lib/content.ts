@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
+import { slugify } from "@/lib/utils";
 import {
   profile as fallbackProfile,
   afrikVine as fallbackAfrikVine,
@@ -122,10 +123,6 @@ function safeParseJSON<T>(raw: string | null | undefined, fallback: T): T {
 
 function nonNullStr(v: string | null | undefined, fallback: string): string {
   return v && v.trim().length > 0 ? v : fallback;
-}
-
-function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
 }
 
 // ---- Tiny in-memory cache (3s) ----
