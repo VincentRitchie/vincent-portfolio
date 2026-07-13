@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Loader2, Save, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,8 +29,10 @@ export function SaveButton({
       await onSave();
       setState("saved");
       setTimeout(() => setState("idle"), 1800);
-    } catch {
+    } catch (err) {
       setState("idle");
+      console.error("[save-button] save failed:", err);
+      toast.error(err instanceof Error ? err.message : "Save failed");
     }
   };
 

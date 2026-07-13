@@ -63,7 +63,10 @@ export function MessagesInbox({ initialMessages }: { initialMessages: InboxMessa
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isRead: !m.isRead }),
       });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Failed to update message");
+      }
       const data = await res.json();
       const updated = data.message as { isRead: boolean };
       setMessages((prev) =>
@@ -71,8 +74,9 @@ export function MessagesInbox({ initialMessages }: { initialMessages: InboxMessa
       );
       setSelected((s) => (s && s.id === m.id ? { ...s, isRead: updated.isRead } : s));
       toast.success(updated.isRead ? "Marked as read" : "Marked as unread");
-    } catch {
-      toast.error("Failed to update message");
+    } catch (err) {
+      console.error("[inbox] toggle read failed:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to update message");
     } finally {
       setBusyId(null);
     }
@@ -83,12 +87,16 @@ export function MessagesInbox({ initialMessages }: { initialMessages: InboxMessa
     setBusyId(deleteId);
     try {
       const res = await fetch(`/api/contact/${deleteId}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Failed to delete message");
+      }
       setMessages((prev) => prev.filter((x) => x.id !== deleteId));
       if (selected?.id === deleteId) setSelected(null);
       toast.success("Message deleted");
-    } catch {
-      toast.error("Failed to delete message");
+    } catch (err) {
+      console.error("[inbox] delete failed:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to delete message");
     } finally {
       setDeleteId(null);
       setBusyId(null);

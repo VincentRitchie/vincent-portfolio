@@ -75,11 +75,15 @@ export function SkillsManager({ initial }: { initial: Skill[] }) {
     if (!deleteId) return;
     try {
       const res = await fetch(`/api/admin/skills/${deleteId}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Delete failed");
+      }
       setItems((prev) => prev.filter((x) => x.id !== deleteId));
       toast.success("Skill deleted");
-    } catch {
-      toast.error("Delete failed");
+    } catch (err) {
+      console.error("[skills] delete failed:", err);
+      toast.error(err instanceof Error ? err.message : "Delete failed");
     } finally {
       setDeleteId(null);
     }
