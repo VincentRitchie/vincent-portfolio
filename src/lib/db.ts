@@ -24,7 +24,11 @@ function hasAllModels(client: PrismaClient): boolean {
 }
 
 function makeClient(): PrismaClient {
-  return new PrismaClient({ log: ['query'] })
+  // Only log full queries in development — in production this would leak
+  // submitted data (e.g. contact-form PII) into server logs.
+  return new PrismaClient({
+    log: process.env.NODE_ENV === 'production' ? ['warn', 'error'] : ['query'],
+  })
 }
 
 let db: PrismaClient
