@@ -78,17 +78,22 @@ export function ProfileMediaManager({
   };
 
   const setPathField = async (field: keyof Settings, path: string) => {
-    const res = await fetch("/api/admin/site-settings", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ [field]: path || null }),
-    });
-    if (!res.ok) {
-      toast.error("Failed to save path");
-      return;
+    try {
+      const res = await fetch("/api/admin/site-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: path || null }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Failed to save path");
+      }
+      setSettings((s) => ({ ...s, [field]: path }));
+      toast.success("Path saved");
+    } catch (err) {
+      console.error("[profile-media] save path failed:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to save path");
     }
-    setSettings((s) => ({ ...s, [field]: path }));
-    toast.success("Path saved");
   };
 
   const copyPath = (path: string) => {

@@ -32,7 +32,9 @@ if (globalForPrisma.prisma && hasAllModels(globalForPrisma.prisma)) {
   db = globalForPrisma.prisma
 } else {
   if (globalForPrisma.prisma) {
-    void globalForPrisma.prisma.$disconnect().catch(() => {})
+    void globalForPrisma.prisma.$disconnect().catch((err) => {
+      console.error('[db] Failed to disconnect stale PrismaClient:', err)
+    })
   }
   db = makeClient()
   if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db

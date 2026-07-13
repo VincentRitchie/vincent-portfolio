@@ -91,11 +91,15 @@ export function SimpleListManager({
     if (!deleteId) return;
     try {
       const res = await fetch(`/api/admin/${endpoint}/${deleteId}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Delete failed");
+      }
       setItems((prev) => prev.filter((x) => x.id !== deleteId));
       toast.success(`${itemLabel} deleted`);
-    } catch {
-      toast.error("Delete failed");
+    } catch (err) {
+      console.error(`[${endpoint}] delete failed:`, err);
+      toast.error(err instanceof Error ? err.message : "Delete failed");
     } finally {
       setDeleteId(null);
     }
