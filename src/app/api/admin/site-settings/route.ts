@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-
-async function requireAdmin() {
-  const session = await getServerSession(authOptions);
-  return session;
-}
+import { requireAdmin, unauthorized } from "@/lib/api";
 
 /** GET /api/admin/site-settings — protected */
 export async function GET() {
   const session = await requireAdmin();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session) return unauthorized();
   try {
     const s = await db.siteSetting.findUnique({ where: { id: "1" } });
     return NextResponse.json({ settings: s });
@@ -24,7 +18,7 @@ export async function GET() {
 /** PUT /api/admin/site-settings — protected. Body = partial SiteSetting fields. */
 export async function PUT(req: NextRequest) {
   const session = await requireAdmin();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session) return unauthorized();
   try {
     const body = await req.json().catch(() => ({}));
 

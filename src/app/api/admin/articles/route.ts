@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requireAdmin, unauthorized, strOrNull } from "@/lib/api";
+import { slugify } from "@/lib/utils";
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const items = await db.article.findMany({
       orderBy: [{ createdAt: "desc" }],
@@ -18,8 +18,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const body = await req.json().catch(() => ({}));
     const title = String(body.title ?? "").trim();
@@ -50,13 +50,4 @@ export async function POST(req: NextRequest) {
     console.error("[articles] POST error:", err);
     return NextResponse.json({ error: "Failed." }, { status: 500 });
   }
-}
-
-function strOrNull(v: unknown): string | null {
-  if (v == null) return null;
-  const s = String(v).trim();
-  return s.length ? s : null;
-}
-function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
 }

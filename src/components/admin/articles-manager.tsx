@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { slugify } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -57,10 +58,6 @@ const empty = (): Article => ({
   featuredImage: "",
   publishedAt: null,
 });
-
-function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
-}
 
 export function ArticlesManager({ initial }: { initial: Article[] }) {
   const [items, setItems] = useState<Article[]>(initial);

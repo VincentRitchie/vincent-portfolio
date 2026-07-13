@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requireAdmin, unauthorized } from "@/lib/api";
 
 /** GET /api/admin/company — protected */
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const c = await db.companyInfo.findUnique({ where: { id: "1" } });
     return NextResponse.json({ company: c });
@@ -18,8 +17,8 @@ export async function GET() {
 
 /** PUT /api/admin/company — protected */
 export async function PUT(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireAdmin();
+  if (!session) return unauthorized();
   try {
     const body = await req.json().catch(() => ({}));
     const allowed: Record<string, unknown> = {};

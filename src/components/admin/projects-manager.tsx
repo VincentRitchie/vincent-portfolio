@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { slugify } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -56,10 +57,6 @@ const empty = (): Project => ({
   order: 0,
   visible: true,
 });
-
-function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
-}
 
 export function ProjectsManager({ initial }: { initial: Project[] }) {
   const [items, setItems] = useState<Project[]>(initial);

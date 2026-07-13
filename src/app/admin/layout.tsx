@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { requireAdmin } from "@/lib/api";
 import { AdminShell } from "@/components/admin/admin-shell";
 
 /**
@@ -17,7 +16,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await requireAdmin();
 
   if (!session) {
     return <>{children}</>;
